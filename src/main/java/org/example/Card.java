@@ -3,12 +3,14 @@ package org.example;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 /**
  * Created by nshatrov on 18.08.2023.
  */
 @Getter
 @Setter
-public class Card {
+public class Card implements Comparable<Card> {
     private Rank rank;
     private Suit suit;
 
@@ -58,4 +60,21 @@ public class Card {
         return new Card(tmpRank, tmpSuit);
     }
 
+    @Override
+    public int compareTo(Card o) {
+        return Integer.compare(this.getRank().ordinal(), o.getRank().ordinal());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return rank == card.rank && suit == card.suit;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rank, suit);
+    }
 }
