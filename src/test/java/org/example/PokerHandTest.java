@@ -7,6 +7,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PokerHandTest {
 
+
+    @Test
+    @DisplayName("Should return HIGH_CARD when no other combinations match")
+    void getCombinationWhenNoOtherCombinationsMatch() {
+        PokerHand pokerHand = PokerHand.fromString("2H 3D 5S 9C KD");
+
+        Combination expectedCombination = Combination.HIGH_CARD;
+        Combination actualCombination = pokerHand.getCombination();
+
+        assertEquals(expectedCombination, actualCombination);
+    }
+
+    @Test
+    @DisplayName("Should return the correct combination")
+    void getCombinationWhenCombinationIsNull() {
+        PokerHand pokerHand = PokerHand.fromString("2H 3H 4H 5H 6H");
+
+        Combination expectedCombination = Combination.STRAIGHT_FLUSH;
+        Combination actualCombination = pokerHand.getCombination();
+
+        assertEquals(expectedCombination, actualCombination);
+    }
+
+    @Test
+    @DisplayName("Should return the correct combination")
+    void getCombinationWhenCombinationIsNotNull() {
+        PokerHand pokerHand = PokerHand.fromString("2D 3H 4H 5H 6H");
+
+        Combination expectedCombination = Combination.STRAIGHT;
+        Combination actualCombination = pokerHand.getCombination();
+
+        assertEquals(expectedCombination, actualCombination);
+    }
+
     @Test
     @DisplayName("Should throw an exception when the input string does not contain exactly 5 cards")
     void fromStringWhenInputDoesNotContainFiveCardsThenThrowException() {
@@ -30,5 +64,4 @@ class PokerHandTest {
         assertNotNull(pokerHand);
         assertEquals(5, pokerHand.getCards().length);
     }
-
 }

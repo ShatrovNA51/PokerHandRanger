@@ -7,7 +7,7 @@ public enum Combination {
     HIGH_CARD,
     PAIR,
     TWO_PAIRS,
-    SET,
+    THREE_OF_KIND,
     STRAIGHT,
     FLUSH,
     FULL_HOUSE,

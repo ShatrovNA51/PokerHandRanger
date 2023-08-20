@@ -1,6 +1,8 @@
 package org.example;
 
-import java.util.Arrays;
+import org.example.combinationmatcher.*;
+
+import java.util.*;
 
 /**
  * Created by nshatrov on 18.08.2023.
@@ -11,9 +13,26 @@ public class PokerHand implements Comparable<PokerHand> {
     private final Card[] cards = new Card[5];
     private final Card highCard;
 
-    private Combination combination;
+    private final Map<Combination, CombinationMatcher> combinationMatchers;
+
+    private final Combination combination;
+
+    private Map<Combination, CombinationMatcher> initCombinationMatcher() {
+        Map<Combination, CombinationMatcher> initCombinationMatchers = new LinkedHashMap<>();
+        initCombinationMatchers.put(Combination.ROYAL_FLUSH, new RoyalFlushMatcher());
+        initCombinationMatchers.put(Combination.STRAIGHT_FLUSH, new StraightFlashMatcher());
+        initCombinationMatchers.put(Combination.FOUR_OF_KIND, new FourOfKIndMatcher());
+        initCombinationMatchers.put(Combination.FULL_HOUSE, new FullHouseMatcher());
+        initCombinationMatchers.put(Combination.FLUSH, new FlushMatcher());
+        initCombinationMatchers.put(Combination.STRAIGHT, new StraightMatcher());
+        initCombinationMatchers.put(Combination.THREE_OF_KIND, new ThreeOfKindMatcher());
+        initCombinationMatchers.put(Combination.TWO_PAIRS, new TwoPairMatcher());
+        initCombinationMatchers.put(Combination.PAIR, new PairMatcher());
+        return initCombinationMatchers;
+    }
 
     private PokerHand(String[] cardsArr) {
+        combinationMatchers = initCombinationMatcher();
         for (int i = 0; i < cards.length; i++) {
             cards[i] = Card.fromString(cardsArr[i]);
         }
@@ -39,6 +58,11 @@ public class PokerHand implements Comparable<PokerHand> {
 
     public Combination getCombination() {
         if (combination == null) {
+            for (Map.Entry<Combination, CombinationMatcher> entry : combinationMatchers.entrySet()) {
+                if (entry.getValue().match(new ArrayList<>(Arrays.asList(cards)))) {
+                    return entry.getKey();
+                }
+            }
             return Combination.HIGH_CARD;
         } else {
             return combination;
@@ -58,6 +82,18 @@ public class PokerHand implements Comparable<PokerHand> {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PokerHand pokerHand = (PokerHand) o;
+        return Arrays.equals(cards, pokerHand.cards) && Objects.equals(highCard, pokerHand.highCard) && combination == pokerHand.combination;
+    }
 
-
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(highCard, combination);
+        result = 31 * result + Arrays.hashCode(cards);
+        return result;
+    }
 }
