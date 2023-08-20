@@ -96,4 +96,11 @@ public class PokerHand implements Comparable<PokerHand> {
         result = 31 * result + Arrays.hashCode(cards);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "PokerHand{" +
+                "cards=" + Arrays.toString(cards) +
+                '}';
+    }
 }

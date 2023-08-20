@@ -77,4 +77,10 @@ public class Card implements Comparable<Card> {
     public int hashCode() {
         return Objects.hash(rank, suit);
     }
+
+    @Override
+    public String toString() {
+        return rank +
+                " " + suit;
+    }
 }
